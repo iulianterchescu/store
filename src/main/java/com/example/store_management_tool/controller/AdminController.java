@@ -12,7 +12,6 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/admin")
-//@HttpConstraint(rolesAllowed = "ADMIN")
 public class AdminController {
     private final ProductService productService;
 

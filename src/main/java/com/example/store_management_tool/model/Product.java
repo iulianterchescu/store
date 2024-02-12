@@ -23,6 +23,7 @@ public class Product {
     @Column(name = "price")
     private Double price;
     @Column(name = "category")
+    @Enumerated(EnumType.STRING)
     private Category category;
     @Column(name = "number_of_products")
     private Integer numberOfProducts;
@@ -32,8 +33,4 @@ public class Product {
     private String characteristics;
     @Column(name = "picture")
     private String picture;
-
-//    //aici daca vreau sa fac o relatie de tabele
-//    private String shelf;
-
 }

@@ -1,7 +1,7 @@
 package com.example.store_management_tool.mapper;
 
 import com.example.store_management_tool.model.Product;
-import com.example.store_management_tool.model.ProductDto;
+import com.example.store_management_tool.model.dtos.ProductDto;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -14,6 +14,7 @@ public class ProductMapper {
                 .picture(product.getPicture())
                 .price(product.getPrice())
                 .productCatalogNumber(product.getProductCatalogNumber())
+                .category(product.getCategory())
                 .build() : ProductDto.builder().build();
     }
 
@@ -25,6 +26,7 @@ public class ProductMapper {
                 .price(product.getPrice())
                 .productCatalogNumber(product.getProductCatalogNumber())
                 .numberOfProducts(numberOfProducts)
+                .category(product.getCategory())
                 .build() : Product.builder().build();
     }
 }

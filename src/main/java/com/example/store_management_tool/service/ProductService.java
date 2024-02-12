@@ -3,9 +3,8 @@ package com.example.store_management_tool.service;
 import com.example.store_management_tool.exception.ProductNotAvailableException;
 import com.example.store_management_tool.mapper.ProductMapper;
 import com.example.store_management_tool.model.Product;
-import com.example.store_management_tool.model.ProductDto;
+import com.example.store_management_tool.model.dtos.ProductDto;
 import com.example.store_management_tool.repository.ProductRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,8 +26,12 @@ public class ProductService {
     }
 
     public void addProduct(ProductDto product, Integer numberOfProducts) {
-        productRepository.save(mapper.fromDto(product, numberOfProducts));
-        log.info("Product with product catalog number " + product.getProductCatalogNumber() + "was added to stock in " + numberOfProducts + " pieces");
+        try {
+            productRepository.save(mapper.fromDto(product, numberOfProducts));
+            log.info("Product with product catalog number " + product.getProductCatalogNumber() + "was added to stock in " + numberOfProducts + " pieces");
+        }catch (Exception e){
+            throw e;
+        }
     }
 
     public void changePrice(UUID productCatalogNumber, Double newPrice) {
@@ -62,7 +65,7 @@ public class ProductService {
 
     private Product getProduct(UUID productCatalogNumber){
         return productRepository.findByProductCatalogNumber(productCatalogNumber)
-                .orElseThrow(() ->new EntityNotFoundException("Product with catalog number: " + productCatalogNumber + " was not found"));
+                .orElseThrow(() ->new ProductNotAvailableException("Product with catalog number: " + productCatalogNumber + " was not found"));
     }
 
     private Boolean checkProductAvailability(Product product, Integer numberOfProductsToCheck) {
@@ -76,5 +79,4 @@ public class ProductService {
         product.setNumberOfProducts(product.getNumberOfProducts()-numberToReduce);
         productRepository.save(product);
     }
-
 }

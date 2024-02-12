@@ -1,6 +1,6 @@
 package com.example.store_management_tool.controller;
 
-import com.example.store_management_tool.model.ProductDto;
+import com.example.store_management_tool.model.dtos.ProductDto;
 import com.example.store_management_tool.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +12,6 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/product")
-//@HttpConstraint(rolesAllowed = "USER")
 public class ProductController {
     private final ProductService service;
 
@@ -21,7 +20,7 @@ public class ProductController {
         return ResponseEntity.ok(service.findProduct(productCatalogNumber));
     }
 
-    @PostMapping("/add/{productCatalogNumber}")
+    @PostMapping("/add/{numberOfProducts}")
     public void addProduct(@RequestBody ProductDto product,
                            @PathVariable Integer numberOfProducts){
         service.addProduct(product, numberOfProducts);
@@ -39,7 +38,7 @@ public class ProductController {
     }
 
     @PutMapping("/sellMore")
-    public ResponseEntity<Map<ProductDto, Integer>> sellMoreProducts(@RequestParam Map<UUID, Integer> shoppingList){
+    public ResponseEntity<Map<ProductDto, Integer>> sellMoreProducts(@RequestBody Map<UUID, Integer> shoppingList){
         return ResponseEntity.ok(service.sellMoreProducts(shoppingList));
     }
 
