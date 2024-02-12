@@ -33,7 +33,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/product/**").hasAuthority(String.valueOf(USER))
-                        .requestMatchers("/api/v1/admin").hasAuthority(String.valueOf(ADMIN))
+                        .requestMatchers("/api/v1/inventory/**").hasAuthority(String.valueOf(ADMIN))
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
                         .anyRequest().authenticated())

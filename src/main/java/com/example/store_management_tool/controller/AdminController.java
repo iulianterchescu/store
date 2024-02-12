@@ -2,26 +2,26 @@ package com.example.store_management_tool.controller;
 
 import com.example.store_management_tool.service.ProductService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/admin")
+@RequestMapping("/api/v1/inventory")
 public class AdminController {
     private final ProductService productService;
 
-    @DeleteMapping
-    public void removeProductFromInventory(UUID productCatalogNumber){
-        productService.removeProductFromInventory(productCatalogNumber);
+    @DeleteMapping("/delete/{productCatalogNumber}")
+    public ResponseEntity<Void> removeProductFromInventory(@PathVariable UUID productCatalogNumber){
+       productService.removeProductFromInventory(productCatalogNumber);
+       return ResponseEntity.ok().build();
     }
 
     @GetMapping()
-    private void getProductsInventory(){
-        //returneaza o mapa in care cheia este uuid-ul produsului si valoarea este numarul de bucati din produsul respectiv
+    private ResponseEntity<Map<UUID, Integer>> getProductsInventory(){
+        return ResponseEntity.ok(productService.getProductsInventory());
     }
 }

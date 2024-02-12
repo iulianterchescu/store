@@ -5,6 +5,7 @@ import com.example.store_management_tool.mapper.ProductMapper;
 import com.example.store_management_tool.model.Product;
 import com.example.store_management_tool.model.dtos.ProductDto;
 import com.example.store_management_tool.repository.ProductRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -59,8 +60,16 @@ public class ProductService {
         return productsMap;
     }
 
+    @Transactional
     public void removeProductFromInventory(UUID productCatalogNumber) {
         productRepository.deleteByProductCatalogNumber(productCatalogNumber);
+    }
+
+    public Map<UUID, Integer> getProductsInventory() {
+        List<Product> products =  productRepository.findAll();
+        Map<UUID, Integer> inventoryMap = new HashMap<>();
+        products.forEach(product -> inventoryMap.put(product.getProductCatalogNumber(), product.getNumberOfProducts()));
+        return inventoryMap;
     }
 
     private Product getProduct(UUID productCatalogNumber){
