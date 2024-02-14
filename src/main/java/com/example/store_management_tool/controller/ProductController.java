@@ -21,18 +21,20 @@ public class ProductController {
     }
 
     @PostMapping("/add/{numberOfProducts}")
-    public void addProduct(@RequestBody ProductDto product,
+    public ResponseEntity<Void> addProduct(@RequestBody ProductDto product,
                            @PathVariable Integer numberOfProducts){
         service.addProduct(product, numberOfProducts);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/changePrice/{productCatalogNumber}/{newPrice}")
-    public void changePrice(@PathVariable UUID productCatalogNumber,
+    public ResponseEntity<Void> changePrice(@PathVariable UUID productCatalogNumber,
                             @PathVariable Double newPrice){
         service.changePrice(productCatalogNumber, newPrice);
+        return ResponseEntity.ok().build();
     }
 
-    @PutMapping("sellOne/{productCatalogNumber}")
+    @PutMapping("/sellOne/{productCatalogNumber}")
     public ResponseEntity<ProductDto> sellOneProduct(@PathVariable UUID productCatalogNumber){
         return ResponseEntity.ok(service.sellOneProduct(productCatalogNumber));
     }
