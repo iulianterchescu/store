@@ -42,9 +42,4 @@ public class ProductController {
         return ResponseEntity.ok(service.sellMoreProducts(shoppingList));
     }
 
-//    @GetMapping("/stock/{productCatalogNumber}")
-//    public ResponseEntity<Integer> getNumberOfProductsAvailable(@PathVariable("productCatalogNumber") String productCatalogNumber){
-//
-//    }
-
 }

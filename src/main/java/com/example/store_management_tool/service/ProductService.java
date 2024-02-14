@@ -27,12 +27,9 @@ public class ProductService {
     }
 
     public void addProduct(ProductDto product, Integer numberOfProducts) {
-        try {
-            productRepository.save(mapper.fromDto(product, numberOfProducts));
-            log.info("Product with product catalog number " + product.getProductCatalogNumber() + "was added to stock in " + numberOfProducts + " pieces");
-        }catch (Exception e){
-            throw e;
-        }
+        productRepository.save(mapper.fromDto(product, numberOfProducts));
+        log.info("Product with product catalog number " + product.getProductCatalogNumber()
+                    + "was added to stock in " + numberOfProducts + " pieces");
     }
 
     public void changePrice(UUID productCatalogNumber, Double newPrice) {

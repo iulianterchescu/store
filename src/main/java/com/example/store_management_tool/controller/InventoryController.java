@@ -1,30 +1,28 @@
 package com.example.store_management_tool.controller;
 
-import com.example.store_management_tool.model.dtos.LoginDto;
-import com.example.store_management_tool.model.dtos.RegisterDto;
-import com.example.store_management_tool.service.AuthService;
+import com.example.store_management_tool.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/auth")
 @RequiredArgsConstructor
+@RequestMapping("/api/v1/inventory")
 public class InventoryController {
+    private final ProductService productService;
 
-    private final AuthService authService;
-
-    @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterDto registerDto)  {
-        return ResponseEntity.ok(authService.register(registerDto));
+    @DeleteMapping("/delete/{productCatalogNumber}")
+    public ResponseEntity<Void> removeProductFromInventory(@PathVariable UUID productCatalogNumber){
+       productService.removeProductFromInventory(productCatalogNumber);
+       return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginDto loginDto){
-        return ResponseEntity.ok(authService.login(loginDto));
+    @GetMapping()
+    private ResponseEntity<Map<UUID, Integer>> getProductsInventory(){
+        return ResponseEntity.ok(productService.getProductsInventory());
     }
+
 }

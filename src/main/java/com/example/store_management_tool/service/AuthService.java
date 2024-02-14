@@ -44,6 +44,7 @@ public class AuthService {
 
     public String register(RegisterDto registerDto) {
         if (userRepository.existsByUsername(registerDto.getUsername())){
+            log.info("Username can't be used because there is another one registered in our services");
             throw new UsernameAlreadyUsedException("Username is already in use");
         }
         String roleType = registerDto.getIsAdmin() ? String.valueOf(ADMIN) : String.valueOf(USER);
@@ -65,6 +66,7 @@ public class AuthService {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             return "User signed in";
         }catch (Exception e){
+            log.info("Username and password wrong");
             throw new BadCredentialsException("Username or password wrong");
         }
     }
