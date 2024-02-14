@@ -1,5 +1,6 @@
 package com.example.store_management_tool.service;
 
+import com.example.store_management_tool.exception.EmptyInventoryException;
 import com.example.store_management_tool.exception.ProductNotAvailableException;
 import com.example.store_management_tool.mapper.ProductMapper;
 import com.example.store_management_tool.model.Category;
@@ -175,6 +176,18 @@ public class ProductServiceTest {
         assertTrue(result.containsKey(NEW_TEST_UUID));
         assertEquals(result.get(products.get(0).getProductCatalogNumber()), products.get(0).getNumberOfProducts());
         assertEquals(result.get(products.get(1).getProductCatalogNumber()), products.get(1).getNumberOfProducts());
+        verify(productRepository).findAll();
+        verifyNoMoreInteractions(productRepository);
+    }
+
+    @Test
+    public void GIVEN_ProductCatalogNumber_when_GetProductsInventory_then_return_EmptyList(){
+        when(productRepository.findAll()).thenReturn(Collections.emptyList());
+
+        EmptyInventoryException exception = assertThrows(EmptyInventoryException.class,
+                () -> productService.getProductsInventory());
+
+        assertEquals(exception.getMessage(), "Product inventory is empty");
         verify(productRepository).findAll();
         verifyNoMoreInteractions(productRepository);
     }
