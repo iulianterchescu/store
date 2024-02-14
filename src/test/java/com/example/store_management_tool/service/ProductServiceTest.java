@@ -55,7 +55,6 @@ public class ProductServiceTest {
         Optional<Product> optionalProduct = Optional.of(buildProduct());
         when(productRepository.findByProductCatalogNumber(TEST_UUID))
                 .thenThrow(new ProductNotAvailableException("Product with catalog number"));
-        when(productMapper.toDto(optionalProduct.get())).thenReturn(buildProductDto());
 
         ProductNotAvailableException exception =assertThrows(ProductNotAvailableException.class,
                 () -> productService.findProduct(TEST_UUID));
@@ -112,7 +111,6 @@ public class ProductServiceTest {
         Optional<Product> optionalProduct = Optional.of(buildProduct());
         when(productRepository.findByProductCatalogNumber(TEST_UUID))
                 .thenThrow(new ProductNotAvailableException("Product with catalog number"));
-        when(productMapper.toDto(optionalProduct.get())).thenReturn(buildProductDto());
 
         ProductNotAvailableException exception =assertThrows(ProductNotAvailableException.class,
                 () -> productService.sellOneProduct(TEST_UUID));
@@ -126,7 +124,6 @@ public class ProductServiceTest {
         optionalProduct.get().setNumberOfProducts(0);
         when(productRepository.findByProductCatalogNumber(TEST_UUID))
                 .thenReturn(optionalProduct);
-        when(productMapper.toDto(optionalProduct.get())).thenReturn(buildProductDto());
 
         ProductNotAvailableException exception = assertThrows(ProductNotAvailableException.class,
                 () -> productService.sellOneProduct(TEST_UUID));
@@ -151,9 +148,35 @@ public class ProductServiceTest {
         assertTrue(result.containsKey(firstProductDto));
         assertTrue(result.containsKey(seccondProductDto));
         assertEquals(result.get(firstProductDto), buildShoppingListMap().get(firstProductDto.getProductCatalogNumber()));
+        assertEquals(result.get(seccondProductDto), buildShoppingListMap().get(seccondProductDto.getProductCatalogNumber()));
         verify(productRepository).findByProductCatalogNumberIn(productCatalogNumbers);
         verify(productRepository, times(2)).save(any(Product.class));
-        verify(productMapper, times(2)).toDto(products.get(0));
+        verify(productMapper, times(1)).toDto(products.get(0));
+        verify(productMapper, times(1)).toDto(products.get(1));
+    }
+
+    @Test
+    public void GIVEN_ProductCatalogNumber_when_removeProductFromInventory_then_return_Success(){
+
+        productService.removeProductFromInventory(TEST_UUID);
+
+        verify(productRepository).deleteByProductCatalogNumber(TEST_UUID);
+        verifyNoMoreInteractions(productRepository);
+    }
+
+    @Test
+    public void GIVEN_ProductCatalogNumber_when_GetProductsInventory_then_return_Success(){
+        List<Product> products = buildProductsList();
+        when(productRepository.findAll()).thenReturn(products);
+        Map<UUID, Integer> result = productService.getProductsInventory();
+
+        assertNotNull(result);
+        assertTrue(result.containsKey(TEST_UUID));
+        assertTrue(result.containsKey(NEW_TEST_UUID));
+        assertEquals(result.get(products.get(0).getProductCatalogNumber()), products.get(0).getNumberOfProducts());
+        assertEquals(result.get(products.get(1).getProductCatalogNumber()), products.get(1).getNumberOfProducts());
+        verify(productRepository).findAll();
+        verifyNoMoreInteractions(productRepository);
     }
 
     private Product buildProduct(){
@@ -190,7 +213,7 @@ public class ProductServiceTest {
         List<Product>products = new ArrayList<>();
         products.add(buildProduct());
         Product product = buildProduct();
-        product.setProductCatalogNumber(TEST_UUID);
+        product.setProductCatalogNumber(NEW_TEST_UUID);
         products.add(product);
         return products;
     }
