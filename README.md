@@ -61,3 +61,11 @@ In this application, controllers serve as the entry points for HTTP requests. Th
     - **Description**: Calls `service.getProductsInventory()` to return the products inventory as a map of productCatalogNumber and productNumber.
 
 ### 3. AuthController 
+- **Responsibilities**: Manages HTTP requests related to user registration and login
+- **Base Url**: /api/auth
+- **Endpoints**: 
+  - **POST `/register`**:
+    - **RequestBody**: RegisterDto
+    - **Functionality**: Register a user/admin in the system
+    - **Return Type**: `ResponseEntity<String>`
+    - **Description**: Calls `authService.register()` to register the user/admin and insert them in the database.
